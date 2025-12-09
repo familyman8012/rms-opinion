@@ -17,7 +17,6 @@ import {
   Lightbulb,
   Send,
   CheckCircle2,
-  FileSpreadsheet,
   ClipboardCheck,
   ShoppingCart,
   Package,
@@ -208,6 +207,28 @@ export function FeedbackForm() {
       >
         <div className="space-y-6">
           <div className="grid gap-6">
+            {/* 주문상품 */}
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-cyan-50 rounded-lg text-cyan-600 mt-1">
+                <Package className="w-4 h-4" />
+              </div>
+              <div className="flex-1">
+                <Controller
+                  name="product_management_rating"
+                  control={control}
+                  render={({ field }) => (
+                    <StarRating
+                      value={field.value || 0}
+                      onChange={field.onChange}
+                      label="주문상품"
+                      description="주문 가능한 상품 조회 및 관리"
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* 공급계약 */}
             <div className="flex items-start gap-3">
               <div className="p-2 bg-blue-50 rounded-lg text-blue-600 mt-1">
                 <FileCheck className="w-4 h-4" />
@@ -220,7 +241,7 @@ export function FeedbackForm() {
                     <StarRating
                       value={field.value || 0}
                       onChange={field.onChange}
-                      label="공급계약 관리"
+                      label="공급계약"
                       description="거래처별 가격 계약 생성 및 관리"
                     />
                   )}
@@ -228,66 +249,91 @@ export function FeedbackForm() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-green-50 rounded-lg text-green-600 mt-1">
-                <ShoppingCart className="w-4 h-4" />
+            {/* 판매주문 그룹 */}
+            <div className="border border-green-100 rounded-xl p-4 bg-green-50/30">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="p-1.5 bg-green-100 rounded-lg text-green-600">
+                  <ShoppingCart className="w-4 h-4" />
+                </div>
+                <span className="font-medium text-green-800">판매주문</span>
               </div>
-              <div className="flex-1">
+              <div className="space-y-4 pl-2">
                 <Controller
-                  name="sales_order_rating"
+                  name="sales_order_management_rating"
                   control={control}
                   render={({ field }) => (
                     <StarRating
                       value={field.value || 0}
                       onChange={field.onChange}
-                      label="판매주문 관리"
+                      label="판매주문관리"
                       description="주문 접수, 확인, SKU 매핑"
                     />
                   )}
                 />
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-orange-50 rounded-lg text-orange-600 mt-1">
-                <Package className="w-4 h-4" />
-              </div>
-              <div className="flex-1">
                 <Controller
-                  name="fulfillment_rating"
+                  name="order_template_rating"
                   control={control}
                   render={({ field }) => (
                     <StarRating
                       value={field.value || 0}
                       onChange={field.onChange}
-                      label="출고주문/릴리즈 관리"
-                      description="출고 요청, 릴리즈 생성, 배송 관리"
+                      label="주문서 템플릿관리"
+                      description="거래처별 주문서 양식 설정"
+                    />
+                  )}
+                />
+                <Controller
+                  name="order_upload_rating"
+                  control={control}
+                  render={({ field }) => (
+                    <StarRating
+                      value={field.value || 0}
+                      onChange={field.onChange}
+                      label="주문서 업로드"
+                      description="엑셀 주문서 파싱 및 등록"
                     />
                   )}
                 />
               </div>
             </div>
 
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-purple-50 rounded-lg text-purple-600 mt-1">
-                <FileSpreadsheet className="w-4 h-4" />
+            {/* 출고 그룹 */}
+            <div className="border border-orange-100 rounded-xl p-4 bg-orange-50/30">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="p-1.5 bg-orange-100 rounded-lg text-orange-600">
+                  <Package className="w-4 h-4" />
+                </div>
+                <span className="font-medium text-orange-800">출고</span>
               </div>
-              <div className="flex-1">
+              <div className="space-y-4 pl-2">
                 <Controller
-                  name="excel_upload_rating"
+                  name="fulfillment_management_rating"
                   control={control}
                   render={({ field }) => (
                     <StarRating
                       value={field.value || 0}
                       onChange={field.onChange}
-                      label="엑셀 주문서 업로드"
-                      description="템플릿 기반 외부 주문서 파싱 및 등록"
+                      label="출고관리"
+                      description="출고 요청, 릴리즈 생성"
+                    />
+                  )}
+                />
+                <Controller
+                  name="fulfillment_list_rating"
+                  control={control}
+                  render={({ field }) => (
+                    <StarRating
+                      value={field.value || 0}
+                      onChange={field.onChange}
+                      label="출고지시 목록"
+                      description="출고 지시 현황 조회"
                     />
                   )}
                 />
               </div>
             </div>
 
+            {/* 승인 */}
             <div className="flex items-start gap-3">
               <div className="p-2 bg-pink-50 rounded-lg text-pink-600 mt-1">
                 <ClipboardCheck className="w-4 h-4" />
@@ -300,7 +346,7 @@ export function FeedbackForm() {
                     <StarRating
                       value={field.value || 0}
                       onChange={field.onChange}
-                      label="승인 프로세스"
+                      label="승인"
                       description="공급계약/본사샘플 승인 요청 및 처리"
                     />
                   )}

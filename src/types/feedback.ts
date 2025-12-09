@@ -7,11 +7,14 @@ export interface FeedbackFormData {
   overall_satisfaction: number;
 
   // 기능별 평가
-  contract_management_rating?: number;
-  sales_order_rating?: number;
-  fulfillment_rating?: number;
-  excel_upload_rating?: number;
-  approval_flow_rating?: number;
+  product_management_rating?: number;        // 주문상품
+  contract_management_rating?: number;       // 공급계약
+  sales_order_management_rating?: number;    // 판매주문 > 판매주문관리
+  order_template_rating?: number;            // 판매주문 > 주문서 템플릿관리
+  order_upload_rating?: number;              // 판매주문 > 주문서 업로드
+  fulfillment_management_rating?: number;    // 출고 > 출고관리
+  fulfillment_list_rating?: number;          // 출고 > 출고지시 목록
+  approval_flow_rating?: number;             // 승인
 
   // UI/UX 평가
   ui_intuitiveness?: number;
@@ -36,11 +39,14 @@ export interface FeedbackFormData {
 }
 
 export const FEATURE_LABELS: Record<string, string> = {
-  contract_management_rating: '공급계약 관리',
-  sales_order_rating: '판매주문 관리',
-  fulfillment_rating: '출고주문/릴리즈 관리',
-  excel_upload_rating: '엑셀 주문서 업로드',
-  approval_flow_rating: '승인 프로세스',
+  product_management_rating: '주문상품',
+  contract_management_rating: '공급계약',
+  sales_order_management_rating: '판매주문관리',
+  order_template_rating: '주문서 템플릿관리',
+  order_upload_rating: '주문서 업로드',
+  fulfillment_management_rating: '출고관리',
+  fulfillment_list_rating: '출고지시 목록',
+  approval_flow_rating: '승인',
 };
 
 export const UX_LABELS: Record<string, string> = {

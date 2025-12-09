@@ -8,10 +8,13 @@ export interface Database {
           respondent_name: string | null;
           department: string | null;
           overall_satisfaction: number | null;
+          product_management_rating: number | null;
           contract_management_rating: number | null;
-          sales_order_rating: number | null;
-          fulfillment_rating: number | null;
-          excel_upload_rating: number | null;
+          sales_order_management_rating: number | null;
+          order_template_rating: number | null;
+          order_upload_rating: number | null;
+          fulfillment_management_rating: number | null;
+          fulfillment_list_rating: number | null;
           approval_flow_rating: number | null;
           ui_intuitiveness: number | null;
           navigation_ease: number | null;
