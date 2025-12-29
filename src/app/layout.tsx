@@ -4,8 +4,8 @@ import { QueryProvider } from '@/components/providers/QueryProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'RMS V2 피드백',
-  description: 'RMS V2 사용자 만족도 조사 및 개선사항 수집',
+  title: 'RMS V1 피드백',
+  description: 'RMS V1 사용자 만족도 조사 및 개선사항 수집',
 };
 
 export default function RootLayout({
