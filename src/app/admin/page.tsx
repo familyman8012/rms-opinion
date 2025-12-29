@@ -284,7 +284,7 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
           </div>
           <h1 className="text-2xl font-bold text-gray-900">관리자 로그인</h1>
           <p className="text-sm text-gray-500 mt-2">
-            RMS V2 피드백 대시보드에 접근하려면 비밀번호를 입력하세요.
+            RMS 피드백 대시보드에 접근하려면 비밀번호를 입력하세요.
           </p>
         </div>
 
@@ -405,7 +405,7 @@ function FeedbackDashboard({ onLogout }: { onLogout: () => void }) {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                  RMS V2 피드백 대시보드
+                  RMS 피드백 대시보드
                 </h1>
                 <p className="text-sm text-gray-500">
                   사용자 피드백을 확인하고 분석합니다

@@ -112,7 +112,7 @@ export function FeedbackForm() {
             소중한 피드백 감사합니다!
           </h1>
           <p className="text-gray-600 mb-6">
-            보내주신 의견은 RMS V2를 더 좋은 시스템으로 발전시키는 데 큰 도움이 됩니다.
+            보내주신 의견은 RMS를 더 좋은 시스템으로 발전시키는 데 큰 도움이 됩니다.
           </p>
           <Button
             onClick={() => setIsSubmitted(false)}
@@ -132,19 +132,19 @@ export function FeedbackForm() {
         <div className="text-center pt-8 pb-4 px-6">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur text-primary-700 rounded-full text-sm font-medium mb-4 shadow-sm">
             <MessageSquare className="w-4 h-4" />
-            RMS V1 사용자 피드백
+            RMS 사용자 피드백
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
             여러분의 의견을 들려주세요
           </h1>
           <p className="text-gray-600 max-w-xl mx-auto text-sm md:text-base">
-            RMS V2를 한 달간 사용하시면서 느끼신 점들을 자유롭게 공유해주세요.
+            RMS를 사용하시면서 느끼신 점들을 자유롭게 공유해주세요.
           </p>
         </div>
         <div className="relative w-full max-w-2xl mx-auto px-4 pb-6">
           <Image
             src="/images/hero-min-min.png"
-            alt="RMS V2 피드백 - Mavis와 함께하는 피드백"
+            alt="RMS 피드백 - Mavis와 함께하는 피드백"
             width={800}
             height={450}
             className="w-full h-auto rounded-xl shadow-md"
@@ -186,7 +186,7 @@ export function FeedbackForm() {
       <Section
         icon={<ThumbsUp className="w-5 h-5" />}
         title="전반적 만족도"
-        description="RMS V2에 대한 전체적인 만족도를 평가해주세요."
+        description="RMS에 대한 전체적인 만족도를 평가해주세요."
       >
         <Controller
           name="overall_satisfaction"
@@ -196,7 +196,7 @@ export function FeedbackForm() {
             <StarRating
               value={field.value}
               onChange={field.onChange}
-              label="RMS V2 전반적 만족도"
+              label="RMS 전반적 만족도"
               required
               size="lg"
             />
@@ -483,7 +483,7 @@ export function FeedbackForm() {
           <TextArea
             label="기타 의견"
             description="그 외 하고 싶은 말씀이 있다면 자유롭게 작성해주세요."
-            placeholder="RMS V2를 사용하면서 느낀 점, 건의사항 등 무엇이든 좋습니다."
+            placeholder="RMS를 사용하면서 느낀 점, 건의사항 등 무엇이든 좋습니다."
             {...register('other_comments')}
           />
         </div>
