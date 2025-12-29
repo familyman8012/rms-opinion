@@ -1,7 +1,8 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import {
   BarChart3,
   Users,
@@ -18,6 +19,9 @@ import {
   Clock,
   ThumbsUp,
   ThumbsDown,
+  Trash2,
+  Lock,
+  LogOut,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import type { Feedback } from '@/types/database';
@@ -100,9 +104,11 @@ function RatingBadge({ rating }: { rating: number | null }) {
 function FeedbackDetailModal({
   feedback,
   onClose,
+  onDelete,
 }: {
   feedback: Feedback;
   onClose: () => void;
+  onDelete: (id: string) => void;
 }) {
   const formatDate = (date: string) => {
     return new Date(date).toLocaleString('ko-KR', {
@@ -149,12 +155,20 @@ function FeedbackDetailModal({
               {formatDate(feedback.created_at)}
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onDelete(feedback.id)}
+              className="p-2 hover:bg-red-50 rounded-lg transition-colors text-red-500"
+            >
+              <Trash2 className="w-5 h-5" />
+            </button>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)] space-y-6">
@@ -162,7 +176,7 @@ function FeedbackDetailModal({
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Users className="w-4 h-4" />
-              {feedback.respondent_name || '익명'}
+              {feedback.respondent_name || '-'}
             </div>
             {feedback.department && (
               <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -232,9 +246,76 @@ function FeedbackDetailModal({
   );
 }
 
-export default function AdminPage() {
+function LoginForm({ onLogin }: { onLogin: () => void }) {
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      if (response.ok) {
+        sessionStorage.setItem('adminAuth', 'true');
+        onLogin();
+        toast.success('로그인되었습니다.');
+      } else {
+        toast.error('비밀번호가 올바르지 않습니다.');
+      }
+    } catch {
+      toast.error('로그인에 실패했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="inline-flex p-3 bg-primary-100 rounded-xl text-primary-600 mb-4">
+            <Lock className="w-8 h-8" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900">관리자 로그인</h1>
+          <p className="text-sm text-gray-500 mt-2">
+            RMS V2 피드백 대시보드에 접근하려면 비밀번호를 입력하세요.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              비밀번호
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              placeholder="비밀번호를 입력하세요"
+              autoFocus
+            />
+          </div>
+          <Button type="submit" className="w-full" disabled={isLoading || !password}>
+            {isLoading ? '확인 중...' : '로그인'}
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function FeedbackDashboard({ onLogout }: { onLogout: () => void }) {
   const [page, setPage] = useState(1);
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery<FeedbackResponse>({
     queryKey: ['feedbacks', page],
@@ -244,6 +325,30 @@ export default function AdminPage() {
       return response.json();
     },
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`/api/feedbacks?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete feedback');
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success('피드백이 삭제되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['feedbacks'] });
+      setSelectedFeedback(null);
+    },
+    onError: () => {
+      toast.error('피드백 삭제에 실패했습니다.');
+    },
+  });
+
+  const handleDelete = (id: string) => {
+    if (window.confirm('정말 이 피드백을 삭제하시겠습니까?')) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('ko-KR', {
@@ -293,18 +398,24 @@ export default function AdminPage() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-primary-600 rounded-xl text-white">
-              <BarChart3 className="w-6 h-6" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-primary-600 rounded-xl text-white">
+                <BarChart3 className="w-6 h-6" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  RMS V2 피드백 대시보드
+                </h1>
+                <p className="text-sm text-gray-500">
+                  사용자 피드백을 확인하고 분석합니다
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                RMS V2 피드백 대시보드
-              </h1>
-              <p className="text-sm text-gray-500">
-                사용자 피드백을 확인하고 분석합니다
-              </p>
-            </div>
+            <Button variant="outline" size="sm" onClick={onLogout}>
+              <LogOut className="w-4 h-4 mr-2" />
+              로그아웃
+            </Button>
           </div>
         </div>
       </header>
@@ -398,7 +509,7 @@ export default function AdminPage() {
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="text-sm text-gray-900">
-                            {feedback.respondent_name || '익명'}
+                            {feedback.respondent_name || '-'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -429,13 +540,21 @@ export default function AdminPage() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <button
-                            onClick={() => setSelectedFeedback(feedback)}
-                            className="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center gap-1"
-                          >
-                            <Eye className="w-4 h-4" />
-                            상세
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setSelectedFeedback(feedback)}
+                              className="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center gap-1"
+                            >
+                              <Eye className="w-4 h-4" />
+                              상세
+                            </button>
+                            <button
+                              onClick={() => handleDelete(feedback.id)}
+                              className="text-red-500 hover:text-red-600 text-sm font-medium flex items-center gap-1"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -491,8 +610,40 @@ export default function AdminPage() {
         <FeedbackDetailModal
           feedback={selectedFeedback}
           onClose={() => setSelectedFeedback(null)}
+          onDelete={handleDelete}
         />
       )}
     </div>
   );
+}
+
+export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+
+  useEffect(() => {
+    const auth = sessionStorage.getItem('adminAuth');
+    setIsAuthenticated(auth === 'true');
+    setIsChecking(false);
+  }, []);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('adminAuth');
+    setIsAuthenticated(false);
+    toast.success('로그아웃되었습니다.');
+  };
+
+  if (isChecking) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-2 border-primary-600 border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <LoginForm onLogin={() => setIsAuthenticated(true)} />;
+  }
+
+  return <FeedbackDashboard onLogout={handleLogout} />;
 }

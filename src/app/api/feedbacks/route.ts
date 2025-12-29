@@ -75,3 +75,39 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+// DELETE: 피드백 삭제
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json(
+        { error: '삭제할 피드백 ID가 필요합니다.' },
+        { status: 400 }
+      );
+    }
+
+    const { error } = await supabase
+      .from('feedbacks')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json(
+        { error: '피드백 삭제에 실패했습니다.' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ message: '피드백이 삭제되었습니다.' });
+  } catch (error) {
+    console.error('Server error:', error);
+    return NextResponse.json(
+      { error: '서버 오류가 발생했습니다.' },
+      { status: 500 }
+    );
+  }
+}

@@ -90,6 +90,10 @@ export function FeedbackForm() {
   });
 
   const onSubmit = (data: FeedbackFormData) => {
+    if (!data.respondent_name?.trim()) {
+      toast.error('영어 이름을 입력해주세요.');
+      return;
+    }
     if (data.overall_satisfaction === 0) {
       toast.error('전반적 만족도를 선택해주세요.');
       return;
@@ -150,16 +154,17 @@ export function FeedbackForm() {
       </div>
       
 
-      {/* 응답자 정보 (선택) */}
+      {/* 응답자 정보 */}
       <Section
         icon={<User className="w-5 h-5" />}
         title="응답자 정보"
-        description="선택 사항입니다. 익명으로 제출하셔도 됩니다."
+        description="회사에서 사용하는 영어 이름을 입력해주세요."
       >
         <div className="grid md:grid-cols-2 gap-4">
           <Input
-            label="이름"
-            placeholder="홍길동"
+            label="영어 이름"
+            placeholder="ex) Julian"
+            required
             {...register('respondent_name')}
           />
           {/* <Controller
