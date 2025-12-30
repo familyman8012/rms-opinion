@@ -15,7 +15,11 @@ export interface Database {
           order_upload_rating: number | null;
           fulfillment_management_rating: number | null;
           fulfillment_list_rating: number | null;
-          approval_flow_rating: number | null;
+          inventory_ledger_rating: number | null;
+          approval_request_rating: number | null;
+          delegation_request_rating: number | null;
+          settlement_management_rating: number | null;
+          fiscal_period_rating: number | null;
           ui_intuitiveness: number | null;
           navigation_ease: number | null;
           loading_speed: number | null;

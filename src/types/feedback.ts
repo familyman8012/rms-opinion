@@ -14,7 +14,11 @@ export interface FeedbackFormData {
   order_upload_rating?: number;              // 판매주문 > 주문서 업로드
   fulfillment_management_rating?: number;    // 출고 > 출고관리
   fulfillment_list_rating?: number;          // 출고 > 출고지시 목록
-  approval_flow_rating?: number;             // 승인
+  inventory_ledger_rating?: number;          // 출고 > 수불부
+  approval_request_rating?: number;          // 승인 > 승인요청
+  delegation_request_rating?: number;        // 승인 > 위임요청
+  settlement_management_rating?: number;     // 결산 > 결산관리
+  fiscal_period_rating?: number;             // 결산 > 회기 관리
 
   // UI/UX 평가
   ui_intuitiveness?: number;
@@ -46,7 +50,11 @@ export const FEATURE_LABELS: Record<string, string> = {
   order_upload_rating: '주문서 업로드',
   fulfillment_management_rating: '출고관리',
   fulfillment_list_rating: '출고지시 목록',
-  approval_flow_rating: '승인',
+  inventory_ledger_rating: '수불부',
+  approval_request_rating: '승인요청',
+  delegation_request_rating: '위임요청',
+  settlement_management_rating: '결산관리',
+  fiscal_period_rating: '회기 관리',
 };
 
 export const UX_LABELS: Record<string, string> = {

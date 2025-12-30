@@ -21,6 +21,7 @@ import {
   ShoppingCart,
   Package,
   FileCheck,
+  BarChart3,
 } from 'lucide-react';
 import { StarRating } from '@/components/ui/StarRating';
 import { TextArea } from '@/components/ui/TextArea';
@@ -335,24 +336,87 @@ export function FeedbackForm() {
                     />
                   )}
                 />
-              </div>
-            </div>
-
-            {/* 승인 */}
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-pink-50 rounded-lg text-pink-600 mt-1">
-                <ClipboardCheck className="w-4 h-4" />
-              </div>
-              <div className="flex-1">
                 <Controller
-                  name="approval_flow_rating"
+                  name="inventory_ledger_rating"
                   control={control}
                   render={({ field }) => (
                     <StarRating
                       value={field.value || 0}
                       onChange={field.onChange}
-                      label="승인"
-                      description="공급계약/본사샘플 승인 요청 및 처리"
+                      label="수불부"
+                      description="출고예정일 기준 출고 라인 목록"
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* 승인 그룹 */}
+            <div className="border border-pink-100 rounded-xl p-4 bg-pink-50/30">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="p-1.5 bg-pink-100 rounded-lg text-pink-600">
+                  <ClipboardCheck className="w-4 h-4" />
+                </div>
+                <span className="font-medium text-pink-800">승인</span>
+              </div>
+              <div className="space-y-4 pl-2">
+                <Controller
+                  name="approval_request_rating"
+                  control={control}
+                  render={({ field }) => (
+                    <StarRating
+                      value={field.value || 0}
+                      onChange={field.onChange}
+                      label="승인요청"
+                      description="공급계약과 HQ_SAMPLE 출고에 대한 승인 요청 관리"
+                    />
+                  )}
+                />
+                <Controller
+                  name="delegation_request_rating"
+                  control={control}
+                  render={({ field }) => (
+                    <StarRating
+                      value={field.value || 0}
+                      onChange={field.onChange}
+                      label="위임요청"
+                      description="승인 위임/대리결재 규칙 관리"
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* 결산 그룹 */}
+            <div className="border border-purple-100 rounded-xl p-4 bg-purple-50/30">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="p-1.5 bg-purple-100 rounded-lg text-purple-600">
+                  <BarChart3 className="w-4 h-4" />
+                </div>
+                <span className="font-medium text-purple-800">결산</span>
+              </div>
+              <div className="space-y-4 pl-2">
+                <Controller
+                  name="settlement_management_rating"
+                  control={control}
+                  render={({ field }) => (
+                    <StarRating
+                      value={field.value || 0}
+                      onChange={field.onChange}
+                      label="결산관리"
+                      description="결산 목록 조회 및 관리"
+                    />
+                  )}
+                />
+                <Controller
+                  name="fiscal_period_rating"
+                  control={control}
+                  render={({ field }) => (
+                    <StarRating
+                      value={field.value || 0}
+                      onChange={field.onChange}
+                      label="회기 관리"
+                      description="결산 회기 설정 및 관리"
                     />
                   )}
                 />
